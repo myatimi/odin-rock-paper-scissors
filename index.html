@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        console.log(`[ Type game(n) to Start ( n is total Round )]`)
+
+        function game(totalRound = 5) {
+
+            let scorePlayer = 0;
+            let scoreComputer = 0;
+            let counterRound = 0;
+
+            console.log(`[ Welcome to Rock Paper Scissor game ! ]`)
+
+            while (counterRound < totalRound) {
+
+                // Run single round and store and print result
+                let roundResult = playRound(playerPlay(), computerPlay());
+                console.log(` ==> Result of round ${counterRound + 1} : ${roundResult}`);
+
+                // Track round score                               
+                let roundScore = calculateScore(roundResult);
+                scorePlayer += roundScore[0];
+                scoreComputer += roundScore[1];
+                roundScore = null;
+
+                // Round Counter Update
+                counterRound++;
+            }
+
+            // End Game
+            console.log(`[ GAME OVER ]`)
+            console.log(`~ Total Score  : Player (${scorePlayer}) vs (${scoreComputer}) Computer`)
+            console.log(`~ Final Result : ${finalWinner(scorePlayer, scoreComputer)}`)
+            console.log(`~ Type game(n) to play new game ( n is total Round )`)
+        }
+
+        function finalWinner(scorePlayer, scoreComputer) {
+            if (scorePlayer > scoreComputer)
+                return " You WIN";
+            else if (scorePlayer < scoreComputer)
+                return "You LOOSE";
+            else
+                return "Its a DRAW";
+        }
+
+        function calculateScore(result) {
+
+            if (result.includes("Win")) {
+                return [1, 0];
+            } else if (result.includes("Loose")) {
+                return [0, 1];
+            } else {
+                return [0, 0];
+            }
+        }
+
+        function playerPlay() {
+
+            let pick;
+            let errorWord = "";
+
+            // Reprompt until user provide right input
+            while (pick === undefined || pick === null) {
+
+                pick = prompt(`${errorWord}Please type Rock, Paper or Scissor.\n\n`)
+
+                if (pick === null) {
+                    console.log("Player pick cancel");
+                    continue;
+                }
+
+                // Normalize input
+                pick = pick.toLocaleLowerCase();
+                errorWord = "";
+
+                switch (pick) {
+                    case "rock":
+                        return "rock";
+                    case "paper":
+                        return "paper";
+                    case "scissor":
+                        return "scissor";
+                    case "":
+                        {
+                            errorWord = `Input Error : No input entered \n`;
+                            pick = null;
+                            break;
+                        }
+                    default:
+                        {
+                            errorWord = `Input Error : ${pick} \n`;
+                            pick = null;
+                        }
+                }
+            }
+        }
+
+        function computerPlay() {
+
+            // Random Pick
+            pick = Math.floor((Math.random() * 3) + 1);
+
+            switch (pick) {
+                case 1:
+                    return 'rock';
+                case 2:
+                    return 'paper';
+                case 3:
+                    return 'scissor';
+            }
+        }
+
+        function playRound(playerSelection, computerSelection) {
+
+            // Pre-set
+            let playerWin;
+
+            // Check if Draw..return 
+            if (playerSelection === computerSelection) {
+                return `Draw! both side pick ${playerSelection}`;
+            }
+
+            // Determine winner
+            switch (playerSelection) {
+                case "rock":
+                    playerWin = (computerSelection === "scissor") ? true : false;
+                    break
+
+                case "paper":
+                    playerWin = (computerSelection === "rock") ? true : false;
+                    break
+
+                case "scissor":
+                    playerWin = (computerSelection === "paper") ? true : false;
+                    break
+            }
+
+            // Win or Loose
+            return (playerWin) ?
+                `You Win! ${playerSelection} beats ${computerSelection} ` :
+                `You Loose! ${computerSelection} beats ${playerSelection} `;
+
+        }
+    </script>
+</body>
+
+</html>
